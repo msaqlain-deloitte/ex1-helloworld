@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="97abd2dc-09c2-424f-99a6-062c407bed7d" basePath="/myapp" >
+		<http:listener-connection host="0.0.0.0" port="${http.port}" />
+	</http:listener-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="a02c7efc-71f1-438b-993b-f9a8a646d231" file="http.yaml" />
+	<flow name="ex1-helloworldFlow" doc:id="be1f9fc0-d882-4071-94e2-28e2031b22ac" >
+		<http:listener doc:name="Listener" doc:id="ebdb59cc-ece8-4abf-a161-31148e01532b" config-ref="HTTP_Listener_config" path="/hello/{city}"/>
+		<set-variable value="#[attributes.queryParams.name]" doc:name="Set Variable" doc:id="b87a062b-cfad-48d7-87fd-f37572ad3fc0" variableName="name"/>
+		<set-variable value="#[attributes.uriParams.city]" doc:name="Set Variable" doc:id="29918352-3414-4992-8546-9a0bdf004329" variableName="city"/>
+		<set-payload value="#[&quot;Hello! This is &quot; ++ vars.name as String ++ &quot; &amp; I'am from &quot; ++ vars.city as String default &quot;Chutiye Query parameter type kar&quot;]" doc:name="Set Payload" doc:id="f2f66b92-2891-4878-8ee6-594fcd20a13e" mimeType="text/plain"/>
+		<logger level="INFO" doc:name="Logger" doc:id="77d1fe6c-d662-4556-b410-d2e7243e515f" message="#[message.payload]"/>
+	</flow>
+</mule>
